@@ -12,11 +12,6 @@ type Account struct {
 	ID       int32
 	Name     string
 	Email    string
+	Avatar   pgtype.Text
 	Password string
-}
-
-type Post struct {
-	ID    int32
-	Title string
-	Body  pgtype.Text
 }

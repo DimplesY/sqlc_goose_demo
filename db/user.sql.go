@@ -11,7 +11,7 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO account (name, email, password)
-VALUES ($1, $2, $3) RETURNING id, name, email, password
+VALUES ($1, $2, $3) RETURNING id, name, email, avatar, password
 `
 
 type CreateUserParams struct {
@@ -27,6 +27,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (Account
 		&i.ID,
 		&i.Name,
 		&i.Email,
+		&i.Avatar,
 		&i.Password,
 	)
 	return i, err
@@ -43,7 +44,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 }
 
 const getAccountById = `-- name: GetAccountById :one
-SELECT id, name, email, password
+SELECT id, name, email, avatar, password
 FROM account
 WHERE id = $1 LIMIT 1
 `
@@ -55,6 +56,7 @@ func (q *Queries) GetAccountById(ctx context.Context, id int32) (Account, error)
 		&i.ID,
 		&i.Name,
 		&i.Email,
+		&i.Avatar,
 		&i.Password,
 	)
 	return i, err

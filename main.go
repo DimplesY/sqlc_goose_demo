@@ -10,11 +10,14 @@ import (
 
 func main() {
 
-	conn, _ := pgx.Connect(context.Background(), "postgres://postgres:123456@localhost:5432/goose_test")
-	defer conn.Close(context.Background())
+	ctx := context.Background()
+
+	conn, _ := pgx.Connect(ctx, "postgres://postgres:123456@localhost:5432/goose_test")
+
+	defer conn.Close(ctx)
 	queries := db.New(conn)
 
-	user, _ := queries.CreateUser(context.Background(), db.CreateUserParams{
+	user, _ := queries.CreateUser(ctx, db.CreateUserParams{
 		Name:     "test",
 		Email:    "test@qq.com",
 		Password: "123456",
@@ -22,22 +25,22 @@ func main() {
 
 	fmt.Println(user)
 
-	u1, _ := queries.GetAccountById(context.Background(), user.ID)
+	u1, _ := queries.GetAccountById(ctx, user.ID)
 	fmt.Println(u1)
 
-	_ = queries.UpdateUser(context.Background(), db.UpdateUserParams{
+	_ = queries.UpdateUser(ctx, db.UpdateUserParams{
 		Name:     "test2",
 		Email:    "test2@qq.com",
 		Password: "1234567",
 		ID:       user.ID,
 	})
 
-	u2, _ := queries.GetAccountById(context.Background(), user.ID)
+	u2, _ := queries.GetAccountById(ctx, user.ID)
 	fmt.Println(u2)
 
-	_ = queries.DeleteUser(context.Background(), user.ID)
+	_ = queries.DeleteUser(ctx, user.ID)
 
-	u3, _ := queries.GetAccountById(context.Background(), user.ID)
+	u3, _ := queries.GetAccountById(ctx, user.ID)
 	fmt.Println(u3)
 
 }
