@@ -4,16 +4,23 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sync"
 	"time"
 
+	"github.com/dimplesY/goose_test/internal/env"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 var (
-	t *jwt.Token
+	key  string
+	once sync.Once
 )
 
-var key = []byte("test")
+func InitHelper() {
+	once.Do(func() {
+		key = env.GetEnvByName("JWT_SECRET", "test")
+	})
+}
 
 func GenerateToken(name string) (string, error) {
 	claims := jwt.MapClaims{
@@ -28,6 +35,7 @@ func GenerateToken(name string) (string, error) {
 }
 
 func VerifyToken(tokenString string) (*jwt.Token, error) {
+	slog.Info("当前 key", "key", key)
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

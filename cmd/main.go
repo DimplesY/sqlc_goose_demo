@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/dimplesY/goose_test/internal/env"
+	"github.com/dimplesY/goose_test/internal/helper"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
@@ -21,6 +22,8 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		panic(err)
 	}
+
+	helper.InitHelper()
 
 	conn, err := pgx.Connect(ctx, env.GetEnvByName("GOOSE_DBSTRING", "postgres://postgres:123456@localhost:5432/goose_test"))
 
