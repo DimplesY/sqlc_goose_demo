@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const getAccountByName = `-- name: GetAccountByName :one
+const getAccountByName = `-- name: LoginByNameAndPassword :one
 SELECT id, name, email, avatar, password
 FROM account
 WHERE name = $1 LIMIT 1

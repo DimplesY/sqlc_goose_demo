@@ -27,6 +27,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
+// LoginByNameAndPassword 用户登录
 func (handler *AccountHandler) LoginByNameAndPassword(w http.ResponseWriter, r *http.Request) {
 	var loginRequest LoginRequest
 
@@ -44,7 +45,13 @@ func (handler *AccountHandler) LoginByNameAndPassword(w http.ResponseWriter, r *
 		return
 	}
 
-	token := helper.GenerateToken(account.Name)
+	token, err := helper.GenerateToken(account.Name)
+
+	if err != nil {
+		slog.Info("登录失败", "error", err)
+		json.Write(w, http.StatusBadRequest, err.Error())
+		return
+	}
 
 	slog.Info("登录成功", "token", token)
 

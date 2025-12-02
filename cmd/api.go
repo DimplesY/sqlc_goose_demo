@@ -6,6 +6,8 @@ import (
 
 	"github.com/dimplesY/goose_test/internal/accounts"
 	database "github.com/dimplesY/goose_test/internal/db"
+	"github.com/dimplesY/goose_test/internal/helper"
+	"github.com/dimplesY/goose_test/internal/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
@@ -27,6 +29,15 @@ func (app *application) mount() http.Handler {
 	accountsHandler := accounts.NewAccountHandler(accountsService)
 
 	r.Post("/login", accountsHandler.LoginByNameAndPassword)
+
+	r.Route("/api", func(r chi.Router) {
+		r.Use(helper.JwtMiddleware)
+
+		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+			json.Write(w, http.StatusOK, "hello world")
+		})
+
+	})
 
 	return r
 }
