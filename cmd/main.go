@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log/slog"
 	"os"
 
@@ -9,13 +10,28 @@ import (
 	"github.com/dimplesY/goose_test/internal/helper"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
 
 	ctx := context.Background()
 
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	lumberjackLogger := &lumberjack.Logger{
+		Filename:   "logs/app.log",
+		MaxSize:    10,   // 单文件最大体积（MB）
+		MaxBackups: 5,    // 保留的旧文件数量
+		MaxAge:     30,   // 文件保留天数
+		Compress:   true, // 压缩旧日志
+	}
+
+	defer lumberjackLogger.Close()
+
+	multiWriter := io.MultiWriter(os.Stdout, lumberjackLogger)
+
+	logger := slog.New(slog.NewJSONHandler(multiWriter, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	}))
 
 	slog.SetDefault(logger)
 

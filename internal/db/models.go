@@ -4,14 +4,10 @@
 
 package database
 
-import (
-	"github.com/jackc/pgx/v5/pgtype"
-)
-
 type Account struct {
-	ID       int32       `json:"id"`
-	Name     string      `json:"name"`
-	Email    string      `json:"email"`
-	Avatar   pgtype.Text `json:"avatar"`
-	Password string      `json:"password"`
+	ID       int32  `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Avatar   string `json:"avatar"`
+	Password string `json:"password"`
 }

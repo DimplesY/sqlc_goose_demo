@@ -1,0 +1,14 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=goose_test
+      - TZ=Asia/Shanghai
+    volumes:
+      - $PWD/docker/db/:/var/lib/postgresql
+    ports:
+      - "5432:5432"
